@@ -1,14 +1,14 @@
 <?php
 /**
- * MailChimp API v3 wrapper for WordPress applications.
+ * Mailchimp API v3 wrapper for WordPress applications.
  *
- * A wrapper class for the MailChimp API version 3 using the WordPress
- * HTTP API.  Based on the MailChimp API class by Drew McLellan
+ * A wrapper class for the Mailchimp API version 3 using the WordPress
+ * HTTP API.  Based on the Mailchimp API class by Drew McLellan
  * (https://github.com/drewm/mailchimp-api) and modified for use in
  * WordPress without cURL, and instead uses WP's wp_remote_post() and
  * wp_remote_get(). Formatted to WordPress coding standards.
  *
- * MailChimp API v3:   https://developer.mailchimp.com
+ * Mailchimp API v3:   https://developer.mailchimp.com
  * WordPress HTTP API: https://developer.wordpress.org/plugins/http-api/
  * This class:         https://github.com/rocketgeek/mailchimp-api
  * Drew's class:       https://github.com/drewm/mailchimp-api
@@ -16,10 +16,11 @@
  * @author Chad Butler
  * @version 1.1.0
  */
-class RocketGeek_MailChimp_API {
+if ( ! class_exists( 'RocketGeek_Mailchimp_API' ) ) :
+class RocketGeek_Mailchimp_API {
 
 	/**
-	 * The MailChimp API key.
+	 * The Mailchimp API key.
 	 *
 	 * @since  1.0.0
 	 * @access private
@@ -28,7 +29,7 @@ class RocketGeek_MailChimp_API {
 	private $api_key;
 
 	/**
-	 * Default MailChimp API endpoint.
+	 * Default Mailchimp API endpoint.
 	 *
 	 * @since  1.0.0
 	 * @access private
@@ -87,7 +88,7 @@ class RocketGeek_MailChimp_API {
 	 * @since 1.0.0
 	 * @since 1.1.0 Added $api_endpoint as param.
 	 *
-	 * @param string $api_key      Your MailChimp API key.
+	 * @param string $api_key      Your Mailchimp API key.
 	 * @param string $api_endpoint Optional custom API endpoint.
 	 */
 	public function __construct( $api_key, $api_endpoint = null ) {
@@ -97,7 +98,7 @@ class RocketGeek_MailChimp_API {
 		if ( null === $api_endpoint ) {
 			
 			if ( strpos( $this->api_key, '-' ) === false ) {
-				wp_die( __( 'Invalid MailChimp API key supplied.', 'rg_mc_api' ) );
+				//wp_die( __( 'Invalid Mailchimp API key supplied.', 'rg_mc_api' ) );
 			}
 
 			// Get the datacenter.
@@ -129,7 +130,7 @@ class RocketGeek_MailChimp_API {
 	 */
 	public function new_batch( $batch_id = null ) {
 		include_once( 'class-rocketgeek-mailchimp-api-batch.php' );
-		return new RocketGeek_MailChimp_API_Batch( $this, $batch_id );
+		return new RocketGeek_Mailchimp_API_Batch( $this, $batch_id );
 	}
 	
 	/**
@@ -177,7 +178,7 @@ class RocketGeek_MailChimp_API {
 	 * @return array|false describing the error
 	 */
 	public function get_last_error() {
-		return $this->last_error ( null != $this->last_error ) ? $this->last_error : false;
+		return $this->last_error = ( null != $this->last_error ) ? $this->last_error : false;
 	}
 
 	/**
@@ -349,3 +350,4 @@ class RocketGeek_MailChimp_API {
 	}
 
 }
+endif;

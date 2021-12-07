@@ -1,15 +1,15 @@
 <?php
 /**
- * A MailChimp Webhook request for WordPress applications. 
+ * A Mailchimp Webhook request for WordPress applications. 
  *
  * This is a wrapper class of webhook operations for the RocketGeek
- * MailChimp API for WordPress. Based on the MailChimp API class 
+ * Mailchimp API for WordPress. Based on the Mailchimp API class 
  * by Drew McLellan (https://github.com/drewm/mailchimp-api) and 
  * modified for use in WordPress without cURL, using WP's 
  * wp_remote_post() and wp_remote_get(). Formatted to WordPress 
  * coding standards.
  *
- * MailChimp API v3:   https://developer.mailchimp.com
+ * Mailchimp API v3:   https://developer.mailchimp.com
  * WordPress HTTP API: https://developer.wordpress.org/plugins/http-api/
  * This class:         https://github.com/rocketgeek/mailchimp-api
  * Drew's class:       https://github.com/drewm/mailchimp-api
@@ -19,7 +19,8 @@
  *
  * @see https://developer.mailchimp.com/documentation/mailchimp/guides/about-webhooks/
  */
-class RocketGeek_MailChimp_API_Webhook {
+if ( ! class_exists( 'RocketGeek_Mailchimp_API_Webhook' ) ) :
+class RocketGeek_Mailchimp_API_Webhook {
 
 	/**
 	 *
@@ -113,3 +114,4 @@ class RocketGeek_MailChimp_API_Webhook {
 		}
 	}
 }
+endif;

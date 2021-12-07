@@ -1,15 +1,15 @@
 <?php
 /**
- * A MailChimp Batch operation for WordPress applications. 
+ * A Mailchimp Batch operation for WordPress applications. 
  *
  * This is a wrapper class of batch operations for the RocketGeek
- * MailChimp API for WordPress. Based on the MailChimp API class 
+ * Mailchimp API for WordPress. Based on the Mailchimp API class 
  * by Drew McLellan (https://github.com/drewm/mailchimp-api) and 
  * modified for use in WordPress without cURL, using WP's 
  * wp_remote_post() and wp_remote_get(). Formatted to WordPress 
  * coding standards.
  *
- * MailChimp API v3:   https://developer.mailchimp.com
+ * Mailchimp API v3:   https://developer.mailchimp.com
  * WordPress HTTP API: https://developer.wordpress.org/plugins/http-api/
  * This class:         https://github.com/rocketgeek/mailchimp-api
  * Drew's class:       https://github.com/drewm/mailchimp-api
@@ -19,7 +19,8 @@
  *
  * @see https://developer.mailchimp.com/documentation/mailchimp/reference/batches/
  */
-class RocketGeek_MailChimp_API_Batch {
+if ( ! class_exists( 'RocketGeek_Mailchimp_API_Batch' ) ) :
+class RocketGeek_Mailchimp_API_Batch {
 
 	/**
 	 *
@@ -57,8 +58,8 @@ class RocketGeek_MailChimp_API_Batch {
 	 * @param
 	 * @param
 	 */
-	public function __construct( MailChimp $mailchimp, $batch_id = null ) {
-		$this->mailchimp = $mailchimp;
+	public function __construct( RocketGeek_Mailchimp_API $mailchimp_api_obj, $batch_id = null ) {
+		$this->mailchimp = $mailchimp_api_obj;
 		$this->batch_id  = $batch_id;
 	}
 
@@ -207,3 +208,4 @@ class RocketGeek_MailChimp_API_Batch {
 		$this->operations[] = $operation;
 	}
 }
+endif;
