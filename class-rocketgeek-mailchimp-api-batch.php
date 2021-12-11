@@ -41,7 +41,7 @@ if ( ! class_exists( 'RocketGeek_Mailchimp_API_Batch' ) ) :
 class RocketGeek_Mailchimp_API_Batch {
 
 	/**
-	 *
+	 * Internal container for the Mailchimp API object.
 	 *
 	 * @since  1.0.0
 	 * @access private
@@ -50,7 +50,7 @@ class RocketGeek_Mailchimp_API_Batch {
 	private $mailchimp;
 
 	/**
-	 *
+	 * Container for the current batch operation.
 	 *
 	 * @since  1.0.0
 	 * @access private
@@ -59,7 +59,7 @@ class RocketGeek_Mailchimp_API_Batch {
 	private $operations = array();
 	
 	/**
-	 *
+	 * Container for the batch ID.
 	 *
 	 * @since  1.0.0
 	 * @access private
@@ -68,13 +68,13 @@ class RocketGeek_Mailchimp_API_Batch {
 	private $batch_id;
 
 	/**
-	 * Class constructor
+	 * Class constructor. 
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param
-	 * @param
-	 * @param
+	 * @param object  $mailchimp
+	 * @param object  $mailchimp_api_obj
+	 * @param string  $batch_id
 	 */
 	public function __construct( RocketGeek_Mailchimp_API $mailchimp_api_obj, $batch_id = null ) {
 		$this->mailchimp = $mailchimp_api_obj;

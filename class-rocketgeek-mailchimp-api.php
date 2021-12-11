@@ -307,68 +307,140 @@ class RocketGeek_Mailchimp_API {
 	 */
 	private function make_request( $http_verb, $method, $args = array(), $timeout = 10 ) {
 
-		// Endpoint assumbly.
+		// Endpoint assembly.
 		$url = $this->api_endpoint . '/' . $method;
 
-		// Begin with clean containers.
-		$this->last_error         = '';
-		$this->request_successful = false;
-		$response                 = array( 'headers' => null, 'body' => null );
-		$this->last_response      = $response;
+        $this->last_error         = '';
+        $this->request_successful = false;
+        $response                 = array('headers' => null, 'body' => null);
+        $this->last_response      = $response;
 
-		// Headers must include encoded API key.
-		$headers = array(
-			'Accept: application/vnd.api+json',
-			'Content-Type: application/vnd.api+json',
-			'Authorization' => 'Basic ' . base64_encode( 'user:'. $this->api_key )
-		);
+        $this->last_request = array(
+            'method'  => $http_verb,
+            'path'    => $method,
+            'url'     => $url,
+            'body'    => '',
+            'timeout' => $timeout,
+        );
 
-		// Request arguments.
-		$this->last_request = array(
-			'method'      => ( 'delete' == $http_verb ) ? 'DELETE' : $http_verb,
-			'timeout'     => $timeout,
-			'httpversion' => '1.0',
-			'sslverify'   => $this->verify_ssl,
-			'headers'     => $headers,
-			'cookies'     => array(),
-			'body'        => null,
-		);
+	    $request_args = array(
+	    	'headers' => array(
+			    'Accept'        => 'application/vnd.api+json',
+			    'Content-Type'  => 'application/vnd.api+json',
+			    'Authorization' => 'apikey ' . $this->api_key
+		    ),
+		    'user-agent' => 'RocketGeek/Mailchimp-API/3.0 (github.com/rocketgeek/mailchimp-api)',
+		    'timeout'    => apply_filters( 'mailchimp_sync_api_timeout', $timeout ),
+		    'sslverify'  => $this->verify_ssl,
+		    'method'     => strtoupper( $http_verb )
+	    );
 
-		// JSON encode $args for all except delete (which require the body to be null and unencoded).
-		if ( 'delete' != $http_verb ) {
-			$this->last_request['body'] = json_encode( $args );
-		}
+		/**
+		 * Filter request args.
+		 * 
+		 * @since 1.1.0
+		 * 
+		 * @param  array   $args
+		 * @param  string  $method
+		 * @param  array   $request_args
+		 */
+	    $args = apply_filters( 'rktgk_mc_api_request_args', $args, $method, $request_args );
 
-		// Handle WP HTTP API action.
-		switch ( $http_verb ) {
-			case 'delete':
-			case 'post':
-			case 'patch':
-			case 'put':
-				if ( ! empty( $args ) ) {
-					$encoded = json_encode( $args );
-					$this->last_request['body'] = $encoded;
-				}
-				$response = wp_remote_post( $url, $this->last_request );
-				break;
-			case 'get':
-				$url = ( ! empty( $args ) ) ? add_query_arg( $args, $url ) : $url;
-				$response = wp_remote_get( $url, $this->last_request );
-				break;
-		}
+	    if ( 'get' !== $http_verb ) {
+		    $request_args['body'] = wp_json_encode( $args );
+	    }
+	    else {
+		    $request_args['body'] = $args;
+	    }
 
-		// Put response into container if not an error.
-		if ( ! is_wp_error( $response ) ) {
-		  $this->last_response['headers'] = $response['headers'];
-		  $this->last_response['body']    = $response['body'];
-		}
+	    $wp_response = wp_remote_request( $url, $request_args );
+	    if ( is_wp_error( $wp_response ) ) {
+		    $this->last_error = $wp_response->get_error_code() . ': ' . $wp_response->get_error_message();
+	    }
+
+        $response['body']    = wp_remote_retrieve_body( $wp_response );
+        $response['headers'] = wp_remote_retrieve_headers( $wp_response );
+	    $this->last_request['headers'] = $request_args['headers'];
+
+        $formatted_response = $this->format_response( $wp_response );
+
+        $this->deterine_success( $wp_response, $formatted_response );
+
+        return $formatted_response;
 		
-		// Retrieve the response body.
-		$body = wp_remote_retrieve_body( $this->last_response );
-		
-		// Return the JSON decoded response.
-		return json_decode( $body, true );
+	}
+	
+    /**
+     * Decode the response and format any error messages for debugging.
+	 * 
+	 * @since 1.1.0
+	 * 
+     * @param  array        $response The response from the curl request
+     * @return array|false            The JSON decoded into an array
+     */
+    private function format_response( $response ) {
+		$this->last_response = $response;
+
+		if ( ! is_wp_error( $response ) && ! empty( $response['body'] ) ) {
+			return json_decode( $response['body'], true );
+		}
+
+		return false;
 	}
 
+    /**
+     * Check if the response was successful or a failure. If it failed, store the error.
+	 * 
+	 * @since 1.1.0
+	 * 
+     * @param  array       $response            The response from the curl request
+     * @param  array|false $formatted_response  The response body payload from the curl request
+     * @return bool                             If the request was successful
+     */
+    private function deterine_success( $response, $formatted_response ) {
+		$status = $this->find_http_status( $response, $formatted_response );
+
+		if ( $status >= 200 && $status <= 299 ) {
+			$this->request_successful = true;
+			return true;
+		}
+
+		if ( isset( $formatted_response['detail'] ) ) {
+			$this->last_error = sprintf( '%d: %s', $formatted_response['status'], $formatted_response['detail'] );
+			return false;
+		}
+
+		$this->last_error = 'Unknown error, call get_last_response() to find out what happened.';
+		return false;
+	}
+
+    /**
+     * Find the HTTP status code from the headers or API response body.
+	 * 
+	 * @since 1.1.0
+	 * 
+     * @param   array       $response            The response from the curl request
+     * @param   array|false $formatted_response  The response body payload from the curl request
+     * @return  int                              HTTP status code
+     */
+    private function find_http_status( $response, $formatted_response ) {
+		$status = wp_remote_retrieve_response_code( $response );
+		if ( is_wp_error( $response ) ) {
+			if ( empty( $status ) ) {
+				return 418;
+			}
+			return $status;
+		}
+
+		if ( ! empty( $status ) ) {
+			return  $status;
+		}
+		elseif ( !empty( $response['body'] ) && isset( $formatted_response['status'] ) ) {
+			return (int)$formatted_response['status'];
+		}
+
+		return 418;
+	}
+	
 }
 endif;
