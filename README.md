@@ -1,7 +1,7 @@
-MailChimp API for WordPress
+Mailchimp API for WordPress
 ===========================
 
-A simple MailChimp API v3 wrapper in PHP based on Drew McLellan's project, rewritten to use WordPress' HTTP API and packaged for simple use in plugins and themes without the need for Composer.
+A simple Mailchimp API v3 wrapper in PHP based on Drew McLellan's project, rewritten to use WordPress' HTTP API and packaged for simple use in plugins and themes without the need for Composer.
 
 Requires PHP 5.4 and WordPress
 
@@ -29,7 +29,7 @@ Examples
 Start by adding the class and creating an instance with your API key
 
 ```php
-$my_wp_chimp = new RocketGeek_MailChimp_API( $my_api_key );
+$my_wp_chimp = new RocketGeek_Mailchimp_API( $my_api_key );
 ```
 
 Note: If you're using this in a plugin or theme project, your API key can (and probably should) be coming from an option in WP. Also, you can optionally specify an $api_endpoint as a second argument if you need a second instance or you need your endpoint to be something other than 'https://<dc>.api.mailchimp.com/3.0'.
@@ -98,14 +98,14 @@ if ( $my_wp_chimp->success() ) {
 Batch Operations
 ----------------
 
-The MailChimp [Batch Operations](http://developer.mailchimp.com/documentation/mailchimp/guides/how-to-use-batch-operations/) functionality enables you to complete multiple operations with a single call. A good example is adding thousands of members to a list - you can perform this in one request rather than thousands.
+The Mailchimp [Batch Operations](http://developer.mailchimp.com/documentation/mailchimp/guides/how-to-use-batch-operations/) functionality enables you to complete multiple operations with a single call. A good example is adding thousands of members to a list - you can perform this in one request rather than thousands.
 
 ```php
-$my_wp_chimp       = new RocketGeek_MailChimp_API( $my_api_key );
+$my_wp_chimp       = new RocketGeek_Mailchimp_API( $my_api_key );
 $my_wp_chimp_batch = $my_wp_chimp->new_batch();
 ```
 
-You can then make requests on the `Batch` object just as you would normally with the `MailChimp` object. The difference is that you need to set an ID for the operation as the first argument, and also that you won't get a response. The ID is used for finding the result of this request in the combined response from the batch operation.
+You can then make requests on the `Batch` object just as you would normally with the `Mailchimp` object. The difference is that you need to set an ID for the operation as the first argument, and also that you won't get a response. The ID is used for finding the result of this request in the combined response from the batch operation.
 
 ```php
 $my_wp_chimp_batch->post( "op1", "lists/$list_id/members", [
@@ -144,24 +144,24 @@ Webhooks
 
 **Note:** Use of the Webhooks functionality requires at least PHP 5.4, but if you're still out there running this then you've got serious security issues.
 
-MailChimp [webhooks](http://kb.mailchimp.com/integrations/other-integrations/how-to-set-up-webhooks) enable your code to be notified of changes to lists and campaigns.  If you want to build a "two-way" application that receives information from MailChimp as well as sending, this is what you need.
+Mailchimp [webhooks](http://kb.mailchimp.com/integrations/other-integrations/how-to-set-up-webhooks) enable your code to be notified of changes to lists and campaigns.  If you want to build a "two-way" application that receives information from Mailchimp as well as sending, this is what you need.
 
 When you set up a webhook you specify a URL on your server for the data to be sent to. This wrapper's Webhook class helps you catch that incoming webhook in a tidy way. It uses a subscription model, with your code subscribing to whichever webhook events it wants to listen for. You provide a callback function that the webhook data is passed to.
 
 To listen for the `unsubscribe` webhook:
 
 ```php
-RocketGeek_MailChimp_API_Webhook::subscribe( 'unsubscribe', function( $data ) {
+RocketGeek_Mailchimp_API_Webhook::subscribe( 'unsubscribe', function( $data ) {
 	print_r( $data );
 });
 ```
 
-At first glance the _subscribe/unsubscribe_ looks confusing - your code is subscribing to the MailChimp `unsubscribe` webhook event. The callback function is passed as single argument - an associative array containing the webhook data.
+At first glance the _subscribe/unsubscribe_ looks confusing - your code is subscribing to the Mailchimp `unsubscribe` webhook event. The callback function is passed as single argument - an associative array containing the webhook data.
 
 If you'd rather just catch all webhooks and deal with them yourself, you can use:
 
 ```php
-$result = RocketGeek_MailChimp_API_Webhook::receive();
+$result = RocketGeek_Mailchimp_API_Webhook::receive();
 print_r( $result );
 ```
 
@@ -182,7 +182,7 @@ For further debugging, you can inspect the headers and body of the response:
 print_r($my_wp_chimp->getLastResponse());
 ```
 
-If you suspect you're sending data in the wrong format, you can look at what was sent to MailChimp by the wrapper:
+If you suspect you're sending data in the wrong format, you can look at what was sent to Mailchimp by the wrapper:
 
 ```php
 print_r($my_wp_chimp->getLastRequest());
@@ -198,3 +198,20 @@ Contributing
 This is a fairly simple wrapper, but it has been made much better by contributions from those using it. If you'd like to suggest an improvement, please raise an issue to discuss it before making your pull request.
 
 Pull requests for bugs are more than welcome - please explain the bug you're trying to fix in the message.
+
+## Versioning
+
+I use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/rocketgeek/jquery_tabs/tags). 
+
+## Authors
+
+* **Chad Butler** - [ButlerBlog](https://github.com/butlerblog)
+* **RocketGeek** - [RocketGeek](https://github.com/rocketgeek)
+
+* Based on original code from Drew McLellan (https://github.com/drewm/mailchimp-api)
+
+## License
+
+This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.
+
+I hope you find this project useful. If you use it your project, attribution is appreciated.
