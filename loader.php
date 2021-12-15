@@ -21,7 +21,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include_once( 'functions.php' );
-include_once( 'class-rocketgeek-mailchimp-api.php' );
-include_once( 'class-rocketgeek-mailchimp-api-batch.php' );
-include_once( 'class-rocketgeek-mailchimp-api-webhook.php' );
+
+global $rktgk_mcapi;
+if ( ! function_exists( 'rktgk_mcapi_init' ) && ! is_object( $rktgk_mcapi ) ):
+    function rktgk_mcapi_init( $api_key, $api_endpoint ) {
+        include_once( 'functions.php' );
+        include_once( 'class-rocketgeek-mailchimp-api.php' );
+        include_once( 'class-rocketgeek-mailchimp-api-batch.php' );
+        include_once( 'class-rocketgeek-mailchimp-api-webhook.php' );
+        $rktgk_mcapi = new RocketGeek_Mailchimp_API( $api_key, $api_endpoint );
+    }
+endif;
