@@ -20,10 +20,10 @@
  * @version    1.1.0
  * @author     Chad Butler <https://butlerblog.com>
  * @author     RocketGeek <https://rocketgeek.com>
- * @copyright  Copyright (c) 2016-2021 Chad Butler
+ * @copyright  Copyright (c) 2016-2022 Chad Butler
  * @license    Apache-2.0
  *
- * Copyright [2021] Chad Butler, RocketGeek
+ * Copyright [2022] Chad Butler, RocketGeek
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -214,12 +214,12 @@ class RocketGeek_Mailchimp_API_Batch {
 		);
 
 		if ( $args ) {
-			if ( $http_verb == 'GET' ) {
+			if ( 'GET' == $http_verb ) {
 				$key = 'params';
-				$operation[$key] = $args;
+				$operation[ $key ] = $args;
 			} else {
 				$key = 'body';
-				$operation[$key] = json_encode( $args );
+				$operation[ $key ] = json_encode( $args );
 			}
 		}
 
