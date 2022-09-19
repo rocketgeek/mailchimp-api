@@ -98,7 +98,7 @@ if ( $my_wp_chimp->success() ) {
 Batch Operations
 ----------------
 
-The Mailchimp [Batch Operations](http://developer.mailchimp.com/documentation/mailchimp/guides/how-to-use-batch-operations/) functionality enables you to complete multiple operations with a single call. A good example is adding thousands of members to a list - you can perform this in one request rather than thousands.
+The Mailchimp [Batch Operations](https://developer.mailchimp.com/documentation/mailchimp/guides/how-to-use-batch-operations/) functionality enables you to complete multiple operations with a single call. A good example is adding thousands of members to a list - you can perform this in one request rather than thousands.
 
 ```php
 $my_wp_chimp       = new RocketGeek_Mailchimp_API( $my_api_key );
@@ -144,7 +144,7 @@ Webhooks
 
 **Note:** Use of the Webhooks functionality requires at least PHP 5.4, but if you're still out there running this then you've got serious security issues.
 
-Mailchimp [webhooks](http://kb.mailchimp.com/integrations/other-integrations/how-to-set-up-webhooks) enable your code to be notified of changes to lists and campaigns.  If you want to build a "two-way" application that receives information from Mailchimp as well as sending, this is what you need.
+Mailchimp [webhooks](https://kb.mailchimp.com/integrations/other-integrations/how-to-set-up-webhooks) enable your code to be notified of changes to lists and campaigns.  If you want to build a "two-way" application that receives information from Mailchimp as well as sending, this is what you need.
 
 When you set up a webhook you specify a URL on your server for the data to be sent to. This wrapper's Webhook class helps you catch that incoming webhook in a tidy way. It uses a subscription model, with your code subscribing to whichever webhook events it wants to listen for. You provide a callback function that the webhook data is passed to.
 
@@ -188,7 +188,7 @@ If you suspect you're sending data in the wrong format, you can look at what was
 print_r($my_wp_chimp->getLastRequest());
 ```
 
-If your server's CA root certificates are not up to date you may find that SSL verification fails and you don't get a response. The correction solution for this [is not to disable SSL verification](http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/). The solution is to update your certificates. If you can't do that, there's an option at the top of the class file. Please don't just switch it off without at least attempting to update your certs -- that's lazy and dangerous. You're not a lazy, dangerous developer are you?
+If your server's CA root certificates are not up to date you may find that SSL verification fails and you don't get a response. The correction solution for this [is not to disable SSL verification](https://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/). The solution is to update your certificates. If you can't do that, there's an option at the top of the class file. Please don't just switch it off without at least attempting to update your certs -- that's lazy and dangerous. You're not a lazy, dangerous developer are you?
 
 If you have **high-level implementation questions about your project** ("How do I add this to WordPress", "I've got a form that takes an email address...") please **take them to somewhere like StackOverflow**. If you think you've found a bug, or would like to discuss a change or improvement, feel free to raise an issue and we'll figure it out between us.
 
@@ -201,7 +201,7 @@ Pull requests for bugs are more than welcome - please explain the bug you're try
 
 ## Versioning
 
-I use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/rocketgeek/jquery_tabs/tags). 
+I use [SemVer](https://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/rocketgeek/jquery_tabs/tags). 
 
 ## Authors
 
